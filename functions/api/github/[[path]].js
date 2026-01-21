@@ -8,8 +8,6 @@ export async function onRequest(context) {
         // Get GitHub token from environment
         const githubToken = env.GITHUB_TOKEN;
 
-        // Check for token existence, but don't error yet if we are just checking health
-
         // Get the GitHub API path from the request params (reliable way)
         // [[path]].js puts the wildcards in context.params.path as an array
         const url = new URL(request.url);
@@ -22,7 +20,7 @@ export async function onRequest(context) {
                 status: 'online',
                 service: 'GP Khudi CMS Proxy',
                 token_configured: !!githubToken,
-                token_prefix: githubToken ? githubToken.substring(0, 15) + '...' : 'none', // Show first 15 chars to verify it's the right token
+                token_prefix: githubToken ? githubToken.substring(0, 15) + '...' : 'none',
                 time: new Date().toISOString()
             }), {
                 headers: {
@@ -86,6 +84,18 @@ export async function onRequest(context) {
                 github_response: errorBody,
                 received_path: url.pathname
             }), {
+                status: githubResponse.status,
+                headers: responseHeaders
+            });
+        }
+
+        // IMPORTANT: Check for null body status codes (204, 304)
+        // Attempting to construct a Response with a body for these statuses throws a TypeError
+        // GitHub API often returns 204 No Content for successful writes/updates or 304 Not Modified
+        const nullBodyStatuses = [204, 205, 304];
+
+        if (nullBodyStatuses.includes(githubResponse.status)) {
+            return new Response(null, {
                 status: githubResponse.status,
                 headers: responseHeaders
             });

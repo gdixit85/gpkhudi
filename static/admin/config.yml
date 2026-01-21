@@ -1,9 +1,12 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: gdixit85/gpkhudi
   branch: main
+  base_url: https://gpkhudi.pages.dev
+  auth_endpoint: /api/auth
 
 # Local development backend (disable before deployment)
-local_backend: true
+# local_backend: true
 
 # Media files configuration - Images can be uploaded here
 media_folder: "static/images/uploads"

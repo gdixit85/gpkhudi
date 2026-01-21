@@ -1,10 +1,6 @@
+# Use test-repo backend for PIN-based access (no GitHub OAuth needed)
 backend:
-  name: github
-  repo: gdixit85/gpkhudi
-  branch: main
-  api_root: https://gpkhudi.pages.dev/api/github
-  base_url: https://gpkhudi.pages.dev
-  auth_endpoint: /api/auth
+  name: test-repo
 
 # Local development backend (disable before deployment)
 # local_backend: true

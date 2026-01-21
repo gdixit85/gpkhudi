@@ -42,6 +42,21 @@ export async function onRequest(context) {
     responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     responseHeaders.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+    // If error, return details for debugging
+    if (!githubResponse.ok) {
+        const text = await githubResponse.text();
+        return new Response(JSON.stringify({
+            error: 'GitHub API Error',
+            status: githubResponse.status,
+            url: githubUrl,
+            github_response: text,
+            received_path: url.pathname
+        }), {
+            status: githubResponse.status,
+            headers: responseHeaders
+        });
+    }
+
     return new Response(githubResponse.body, {
         status: githubResponse.status,
         headers: responseHeaders

@@ -7,17 +7,38 @@ export async function onRequest(context) {
 
         // Get GitHub token from environment
         const githubToken = env.GITHUB_TOKEN;
+
+        // Check for token existence, but don't error yet if we are just checking health
+
+        // Get the GitHub API path from the request params (reliable way)
+        // [[path]].js puts the wildcards in context.params.path as an array
+        const url = new URL(request.url);
+        const pathSegments = context.params.path || [];
+
+        // Health Check / Debugging Endpoint
+        // If accessing the root /api/github, return status of the proxy
+        if (pathSegments.length === 0) {
+            return new Response(JSON.stringify({
+                status: 'online',
+                service: 'GP Khudi CMS Proxy',
+                token_configured: !!githubToken,
+                token_prefix: githubToken ? githubToken.substring(0, 15) + '...' : 'none', // Show first 15 chars to verify it's the right token
+                time: new Date().toISOString()
+            }), {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }
+            });
+        }
+
+        // For actual logical requests, Token IS required
         if (!githubToken) {
             return new Response(JSON.stringify({ error: 'GitHub token not configured in Cloudflare Pages settings' }), {
                 status: 500,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
-
-        // Get the GitHub API path from the request params (reliable way)
-        // [[path]].js puts the wildcards in context.params.path as an array
-        const url = new URL(request.url);
-        const pathSegments = context.params.path || [];
 
         // Construct GitHub URL
         const githubPath = pathSegments.join('/');
@@ -52,6 +73,8 @@ export async function onRequest(context) {
             let errorBody = "";
             try {
                 errorBody = await githubResponse.text();
+                // Try to parse JSON if possible to return clean object
+                try { errorBody = JSON.parse(errorBody); } catch (e) { }
             } catch (e) {
                 errorBody = "Could not read error body";
             }

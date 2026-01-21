@@ -66,6 +66,18 @@ export async function onRequest(context) {
         responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
         responseHeaders.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+        // IMPORTANT: Check for null body status codes FIRST (before error handling)
+        // These status codes (204, 304, etc.) are not errors but require special handling
+        // 304 Not Modified has response.ok = false, so check this before the error block
+        const nullBodyStatuses = [204, 205, 304];
+
+        if (nullBodyStatuses.includes(githubResponse.status)) {
+            return new Response(null, {
+                status: githubResponse.status,
+                headers: responseHeaders
+            });
+        }
+
         // If error, return details for debugging
         if (!githubResponse.ok) {
             let errorBody = "";
@@ -84,18 +96,6 @@ export async function onRequest(context) {
                 github_response: errorBody,
                 received_path: url.pathname
             }), {
-                status: githubResponse.status,
-                headers: responseHeaders
-            });
-        }
-
-        // IMPORTANT: Check for null body status codes (204, 304)
-        // Attempting to construct a Response with a body for these statuses throws a TypeError
-        // GitHub API often returns 204 No Content for successful writes/updates or 304 Not Modified
-        const nullBodyStatuses = [204, 205, 304];
-
-        if (nullBodyStatuses.includes(githubResponse.status)) {
-            return new Response(null, {
                 status: githubResponse.status,
                 headers: responseHeaders
             });

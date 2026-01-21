@@ -15,7 +15,8 @@ export async function onRequest(context) {
 
     // Get the GitHub API path from the request
     const url = new URL(request.url);
-    const githubPath = url.pathname.replace('/api/github/', '');
+    // Robustly remove /api/github prefix (with or without trailing slash)
+    const githubPath = url.pathname.replace(/^\/api\/github\/?/, '');
     const githubUrl = `https://api.github.com/${githubPath}${url.search}`;
 
     // Forward the request to GitHub API with authentication

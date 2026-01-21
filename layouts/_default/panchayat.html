@@ -1,0 +1,116 @@
+{{ define "main" }}
+<section class="section">
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: var(--spacing-xs);">ग्रामपंचायत प्रशासन</h1>
+        <p style="text-align: center; color: var(--color-text-light); margin-bottom: var(--spacing-xl);">
+            खुडी ग्रामपंचायतचे निर्वाचित प्रतिनिधी आणि अधिकारी
+        </p>
+
+        <!-- Sarpanch Section -->
+        {{ $sarpanch := where (where .Site.RegularPages "Section" "officials") ".Params.role" "सरपंच" }}
+        {{ if $sarpanch }}
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">सरपंच</h2>
+        <div class="officials-grid" style="max-width: 350px; margin: 0 auto var(--spacing-xl);">
+            {{ range $sarpanch }}
+            <div class="official-card sarpanch">
+                <div class="official-photo">
+                    {{ if .Params.photo }}
+                    <img src="{{ .Params.photo }}" alt="{{ .Title }}">
+                    {{ else }}
+                    👤
+                    {{ end }}
+                </div>
+                <h3 class="official-name">{{ .Title }}</h3>
+                <p class="official-role">सरपंच, खुडी ग्रामपंचायत</p>
+                <p class="official-contact">
+                    {{ if .Params.phone }}📞 {{ .Params.phone }}<br>{{ end }}
+                    {{ if .Params.email }}📧 {{ .Params.email }}{{ end }}
+                </p>
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        <!-- Gram Sevak Section -->
+        {{ $gramsevak := where (where .Site.RegularPages "Section" "officials") ".Params.role" "ग्रामसेवक" }}
+        {{ if $gramsevak }}
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">ग्रामसेवक</h2>
+        <div class="officials-grid" style="max-width: 350px; margin: 0 auto var(--spacing-xl);">
+            {{ range $gramsevak }}
+            <div class="official-card">
+                <div class="official-photo">
+                    {{ if .Params.photo }}
+                    <img src="{{ .Params.photo }}" alt="{{ .Title }}">
+                    {{ else }}
+                    👤
+                    {{ end }}
+                </div>
+                <h3 class="official-name">{{ .Title }}</h3>
+                <p class="official-role">ग्रामसेवक</p>
+                <p class="official-contact">
+                    {{ if .Params.phone }}📞 {{ .Params.phone }}<br>{{ end }}
+                    {{ if .Params.email }}📧 {{ .Params.email }}{{ end }}
+                </p>
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        <!-- Deputy Sarpanch Section -->
+        {{ $upsarpanch := where (where .Site.RegularPages "Section" "officials") ".Params.role" "उपसरपंच" }}
+        {{ if $upsarpanch }}
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">उपसरपंच</h2>
+        <div class="officials-grid" style="max-width: 350px; margin: 0 auto var(--spacing-xl);">
+            {{ range $upsarpanch }}
+            <div class="official-card">
+                <div class="official-photo">
+                    {{ if .Params.photo }}
+                    <img src="{{ .Params.photo }}" alt="{{ .Title }}">
+                    {{ else }}
+                    👤
+                    {{ end }}
+                </div>
+                <h3 class="official-name">{{ .Title }}</h3>
+                <p class="official-role">उपसरपंच</p>
+                <p class="official-contact">
+                    {{ if .Params.phone }}📞 {{ .Params.phone }}<br>{{ end }}
+                    {{ if .Params.email }}📧 {{ .Params.email }}{{ end }}
+                </p>
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        <!-- Ward Members Section -->
+        {{ $wardmembers := where (where .Site.RegularPages "Section" "officials") ".Params.role" "वॉर्ड सदस्य" }}
+        {{ if $wardmembers }}
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">वॉर्ड सदस्य</h2>
+        <div class="officials-grid">
+            {{ range sort $wardmembers ".Params.order" }}
+            <div class="official-card">
+                <div class="official-photo">
+                    {{ if .Params.photo }}
+                    <img src="{{ .Params.photo }}" alt="{{ .Title }}">
+                    {{ else }}
+                    👤
+                    {{ end }}
+                </div>
+                <h3 class="official-name">{{ .Title }}</h3>
+                <p class="official-role">वॉर्ड क्र. {{ .Params.ward }}</p>
+                <p class="official-contact">
+                    {{ if .Params.phone }}📞 {{ .Params.phone }}{{ end }}
+                </p>
+            </div>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        <!-- CMS Instructions -->
+        <div class="alert alert-info" style="margin-top: var(--spacing-xl);">
+            <strong>📝 माहिती अपडेट करण्यासाठी:</strong>
+            <a href="/admin/" target="_blank">व्यवस्थापन पॅनेल</a> मध्ये जा आणि "अधिकारी" विभागात नवीन माहिती जोडा किंवा
+            संपादित करा.
+        </div>
+    </div>
+</section>
+{{ end }}

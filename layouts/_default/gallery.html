@@ -1,0 +1,90 @@
+{{ define "main" }}
+<section class="section">
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: var(--spacing-xs);">छायाचित्र दालन</h1>
+        <p style="text-align: center; color: var(--color-text-light); margin-bottom: var(--spacing-xl);">
+            खुडी गावातील विकास कामांचे छायाचित्रे
+        </p>
+
+        <!-- Gallery Grid from CMS -->
+        <div class="gallery-grid" id="gallery-grid">
+            {{ $gallery := where .Site.RegularPages "Section" "gallery" }}
+            {{ range sort $gallery ".Date" "desc" }}
+            <div class="gallery-item" data-category="{{ .Params.category }}">
+                {{ if .Params.cover_image }}
+                <a href="{{ .Params.cover_image }}" target="_blank">
+                    <img src="{{ .Params.cover_image }}" alt="{{ .Title }}" loading="lazy">
+                </a>
+                <div class="gallery-caption">
+                    <h4>{{ .Title }}</h4>
+                    <p>{{ .Params.description }}</p>
+                </div>
+                {{ else }}
+                <div class="gallery-placeholder">
+                    {{ if eq .Title "रस्ता बांधकाम" }}<span class="gallery-icon">🛣️</span>{{ end }}
+                    {{ if eq .Title "पाणी पुरवठा" }}<span class="gallery-icon">🚰</span>{{ end }}
+                    {{ if eq .Title "पक्की घरे" }}<span class="gallery-icon">🏠</span>{{ end }}
+                    {{ if not (or (eq .Title "रस्ता बांधकाम") (eq .Title "पाणी पुरवठा") (eq .Title "पक्की घरे")) }}<span
+                        class="gallery-icon">📷</span>{{ end }}
+                    <h4>{{ .Title }}</h4>
+                    <p>{{ .Params.description | default .Params.category }}</p>
+                </div>
+                {{ end }}
+            </div>
+            {{ end }}
+        </div>
+
+        {{ if not (where .Site.RegularPages "Section" "gallery") }}
+        <div class="alert alert-info">
+            <strong>📸 छायाचित्रे नाहीत.</strong>
+            <a href="/admin/#/collections/gallery" target="_blank">व्यवस्थापन पॅनेल</a> मधून फोटो जोडा.
+        </div>
+        {{ end }}
+
+        <div style="text-align: center; margin-top: var(--spacing-xl);">
+            <a href="/admin/#/collections/gallery" class="btn btn-primary" target="_blank">📸 फोटो जोडा / संपादित
+                करा</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .gallery-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        color: white;
+        padding: var(--spacing-sm);
+    }
+
+    .gallery-caption h4 {
+        color: white;
+        margin-bottom: 0;
+        font-size: 0.9rem;
+    }
+
+    .gallery-caption p {
+        margin-bottom: 0;
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+
+    .gallery-item {
+        position: relative;
+    }
+
+    .gallery-item a {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+{{ end }}

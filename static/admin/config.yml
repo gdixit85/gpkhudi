@@ -1,0 +1,154 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Local development backend (disable before deployment)
+local_backend: true
+
+# Media files configuration - Images can be uploaded here
+media_folder: "static/images/uploads"
+public_folder: "/images/uploads"
+
+# Site locale - Marathi
+locale: "mr"
+
+# Collections (content types)
+collections:
+
+  # ============================================
+  # Site Settings (Global)
+  # ============================================
+  - name: "settings"
+    label: "⚙️ साइट सेटिंग्ज"
+    files:
+      - name: "site_info"
+        label: "साइट माहिती"
+        file: "data/settings.yml"
+        fields:
+          - { name: "site_name", label: "साइट नाव", widget: "string", default: "खुडी ग्रामपंचायत" }
+          - { name: "tagline", label: "टॅगलाइन", widget: "string", default: "हापूस आंब्याचे माहेरघर" }
+          - { name: "office_phone", label: "कार्यालय दूरध्वनी", widget: "string" }
+          - { name: "sarpanch_phone", label: "सरपंच संपर्क", widget: "string" }
+          - { name: "gramsevak_phone", label: "ग्रामसेवक संपर्क", widget: "string" }
+          - { name: "email", label: "ईमेल", widget: "string", required: false }
+          - { name: "address", label: "पत्ता", widget: "text" }
+          - { name: "pincode", label: "पिनकोड", widget: "string", default: "416613" }
+
+  # ============================================
+  # Pages
+  # ============================================
+  - name: "pages"
+    label: "📄 पृष्ठे"
+    files:
+      - name: "about"
+        label: "आमच्याबद्दल"
+        file: "content/about.md"
+        fields:
+          - { name: "title", label: "शीर्षक", widget: "string" }
+          - { name: "description", label: "वर्णन", widget: "string" }
+          - { name: "body", label: "मजकूर", widget: "markdown" }
+      
+      - name: "home_hero"
+        label: "मुख्यपृष्ठ हीरो"
+        file: "data/home.yml"
+        fields:
+          - { name: "hero_title", label: "हीरो शीर्षक", widget: "string", default: "खुडी ग्रामपंचायातमध्ये आपले स्वागत" }
+          - { name: "hero_subtitle", label: "उपशीर्षक", widget: "string", default: "देवगड तालुका, सिंधुदुर्ग जिल्हा, महाराष्ट्र" }
+          - { name: "hero_tagline", label: "टॅगलाइन", widget: "string", default: "कोकणातील निसर्गरम्य गाव - हापूस आंब्याचे माहेरघर" }
+          - { name: "hero_image", label: "पार्श्वभूमी फोटो", widget: "image", required: false }
+
+  # ============================================
+  # Officials (Panchayat Body)
+  # ============================================
+  - name: "officials"
+    label: "👥 अधिकारी"
+    label_singular: "अधिकारी"
+    folder: "content/officials"
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: ["order", "title", "role"]
+    fields:
+      - { name: "title", label: "नाव", widget: "string", hint: "उदा. श्री. राजेश पाटील" }
+      - { name: "role", label: "पद", widget: "select", options: ["सरपंच", "उपसरपंच", "ग्रामसेवक", "वॉर्ड सदस्य"] }
+      - { name: "ward", label: "वॉर्ड क्रमांक", widget: "number", required: false, hint: "फक्त वॉर्ड सदस्यांसाठी" }
+      - { name: "phone", label: "संपर्क क्रमांक", widget: "string", hint: "उदा. 9876543210" }
+      - { name: "email", label: "ईमेल", widget: "string", required: false }
+      - { name: "photo", label: "फोटो", widget: "image", required: false, hint: "चौरस फोटो वापरा" }
+      - { name: "order", label: "क्रम", widget: "number", default: 10, hint: "कमी क्रमांक प्रथम दिसेल" }
+      - { name: "body", label: "अतिरिक्त माहिती", widget: "markdown", required: false }
+
+  # ============================================
+  # Gram Sabha Calendar
+  # ============================================
+  - name: "gramsabha"
+    label: "📅 ग्रामसभा"
+    label_singular: "ग्रामसभा"
+    folder: "content/gramsabha"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sortable_fields: ["date", "title"]
+    fields:
+      - { name: "title", label: "ग्रामसभा शीर्षक", widget: "string", hint: "उदा. प्रजासत्ताक दिन ग्रामसभा" }
+      - { name: "date", label: "तारीख", widget: "datetime", date_format: "DD MMMM YYYY", time_format: "HH:mm" }
+      - { name: "location", label: "स्थान", widget: "string", default: "ग्रामपंचायत कार्यालय" }
+      - { name: "agenda", label: "कार्यक्रम", widget: "markdown", required: false, hint: "ग्रामसभेचा कार्यक्रम" }
+      - { name: "minutes", label: "इतिवृत्त", widget: "markdown", required: false, hint: "बैठकीचे इतिवृत्त (बैठकीनंतर भरा)" }
+      - { name: "attachment", label: "जोडलेली फाइल", widget: "file", required: false }
+
+  # ============================================
+  # Notices & Alerts
+  # ============================================
+  - name: "notices"
+    label: "📢 सूचना"
+    label_singular: "सूचना"
+    folder: "content/notices"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    sortable_fields: ["date", "title", "category"]
+    fields:
+      - { name: "title", label: "शीर्षक", widget: "string" }
+      - { name: "date", label: "तारीख", widget: "datetime" }
+      - { name: "category", label: "प्रकार", widget: "select", options: ["ग्रामसभा", "निविदा", "नोकरी", "सामान्य", "पाणी", "वीज", "रस्ता"] }
+      - { name: "priority", label: "महत्त्व", widget: "select", options: ["सामान्य", "महत्त्वाचे", "अत्यंत महत्त्वाचे"], default: "सामान्य" }
+      - { name: "body", label: "मजकूर", widget: "markdown" }
+      - { name: "attachment", label: "जोडलेली फाइल (PDF)", widget: "file", required: false }
+      - { name: "expiry_date", label: "समाप्ती तारीख", widget: "datetime", required: false, hint: "या तारखेनंतर सूचना दिसणार नाही" }
+
+  # ============================================
+  # Photo Gallery
+  # ============================================
+  - name: "gallery"
+    label: "📸 छायाचित्र दालन"
+    label_singular: "छायाचित्र"
+    folder: "content/gallery"
+    create: true
+    slug: "{{slug}}"
+    media_folder: "/static/images/gallery"
+    public_folder: "/images/gallery"
+    fields:
+      - { name: "title", label: "शीर्षक", widget: "string", hint: "उदा. गणेशोत्सव २०२४" }
+      - { name: "date", label: "तारीख", widget: "datetime" }
+      - { name: "category", label: "प्रकार", widget: "select", options: ["सण-उत्सव", "विकास कामे", "शालेय कार्यक्रम", "निसर्ग", "ग्रामसभा", "इतर"] }
+      - { name: "cover_image", label: "मुख्य फोटो", widget: "image" }
+      - { name: "images", label: "अधिक फोटो", widget: "list", required: false, field: { name: "image", label: "फोटो", widget: "image" } }
+      - { name: "description", label: "वर्णन", widget: "text", required: false }
+
+  # ============================================
+  # Government Schemes (Editable Info)
+  # ============================================
+  - name: "schemes"
+    label: "🏛️ शासकीय योजना"
+    label_singular: "योजना"
+    folder: "content/schemes"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { name: "title", label: "योजना नाव", widget: "string" }
+      - { name: "type", label: "योजना प्रकार", widget: "select", options: ["केंद्र शासन", "राज्य शासन", "जिल्हा परिषद"] }
+      - { name: "icon", label: "आयकॉन", widget: "string", default: "🏛️", hint: "इमोजी वापरा" }
+      - { name: "order", label: "क्रम", widget: "number", default: 10 }
+      - { name: "eligibility", label: "पात्रता", widget: "markdown" }
+      - { name: "benefits", label: "लाभ", widget: "markdown" }
+      - { name: "documents", label: "आवश्यक कागदपत्रे", widget: "markdown", required: false }
+      - { name: "link", label: "अधिक माहिती लिंक", widget: "string", required: false }
+      - { name: "body", label: "सविस्तर माहिती", widget: "markdown", required: false }

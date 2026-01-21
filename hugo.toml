@@ -1,0 +1,61 @@
+# Hugo configuration for Khudi Grampanchayat Website
+baseURL = "https://khudi-gp.pages.dev/"
+languageCode = "mr"
+title = "खुडी ग्रामपंचायत"
+
+# Disable default theming, we use custom layouts
+disableKinds = ["taxonomy", "term"]
+
+[params]
+  description = "खुडी ग्रामपंचायत, देवगड, सिंधुदुर्ग, महाराष्ट्र - अधिकृत वेबसाईट"
+  author = "खुडी ग्रामपंचायत"
+  district = "सिंधुदुर्ग"
+  taluka = "देवगड"
+  state = "महाराष्ट्र"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[menu]
+  [[menu.main]]
+    identifier = "home"
+    name = "मुख्यपृष्ठ"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    identifier = "about"
+    name = "आमच्याबद्दल"
+    url = "/about/"
+    weight = 2
+  [[menu.main]]
+    identifier = "panchayat"
+    name = "ग्रामपंचायत प्रशासन"
+    url = "/panchayat/"
+    weight = 3
+  [[menu.main]]
+    identifier = "notices"
+    name = "सूचना व बातम्या"
+    url = "/notices/"
+    weight = 4
+  [[menu.main]]
+    identifier = "schemes"
+    name = "शासकीय योजना"
+    url = "/schemes/"
+    weight = 5
+  [[menu.main]]
+    identifier = "citizen"
+    name = "नागरिक सुविधा"
+    url = "/citizen/"
+    weight = 6
+  [[menu.main]]
+    identifier = "gallery"
+    name = "छायाचित्र दालन"
+    url = "/gallery/"
+    weight = 7
+  [[menu.main]]
+    identifier = "contact"
+    name = "संपर्क"
+    url = "/contact/"
+    weight = 8

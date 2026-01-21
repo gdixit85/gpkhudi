@@ -1,0 +1,127 @@
+{{ define "main" }}
+<section class="section">
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: var(--spacing-xs);">सूचना व बातम्या</h1>
+        <p style="text-align: center; color: var(--color-text-light); margin-bottom: var(--spacing-xl);">
+            ग्रामसभा तारखा, निविदा, नोकरीच्या संधी आणि महत्त्वाच्या बातम्या
+        </p>
+
+        <!-- Latest Notices from CMS -->
+        <h2 style="margin-bottom: var(--spacing-lg);">📢 ताज्या सूचना</h2>
+
+        {{ $notices := where .Site.RegularPages "Section" "notices" }}
+        {{ if $notices }}
+        <div class="notice-list">
+            {{ range sort $notices ".Date" "desc" | first 10 }}
+            <article class="notice-card">
+                <div class="notice-date">
+                    <span class="date-day">{{ .Date.Format "02" }}</span>
+                    <span class="date-month">{{ index (split
+                        "जाने|फेब्रु|मार्च|एप्रि|मे|जून|जुलै|ऑग|सप्टें|ऑक्टो|नोव्हें|डिसें" "|") (sub (int (.Date.Format
+                        "1")) 1) }}</span>
+                    <span class="date-year">{{ .Date.Format "2006" }}</span>
+                </div>
+                <div class="notice-content">
+                    {{ $category := .Params.category | default "सामान्य" }}
+                    <span class="notice-badge 
+            {{ if eq $category " ग्रामसभा" }}badge-gramsabha{{ end }} {{ if eq $category "निविदा" }}badge-tender{{ end
+                        }} {{ if eq $category "नोकरी" }}badge-job{{ end }} {{ if eq $category "सामान्य"
+                        }}badge-general{{ end }} ">{{ $category }}</span>
+          <h3>{{ .Title }}</h3>
+          <p>{{ .Summary | truncate 150 }}</p>
+          {{ if .Params.attachment }}
+          <a href=" {{ .Params.attachment }}" class="btn btn-outline btn-sm" download>📎 फाइल डाउनलोड करा</a>
+                        {{ end }}
+                </div>
+            </article>
+            {{ end }}
+        </div>
+        {{ else }}
+        <div class="alert alert-info">
+            <strong>📌 सूचना:</strong> सध्या कोणतीही सूचना नाही. <a href="/admin/" target="_blank">व्यवस्थापन पॅनेल</a>
+            मधून नवीन सूचना जोडा.
+        </div>
+        {{ end }}
+    </div>
+</section>
+
+<!-- Gram Sabha Calendar from CMS -->
+<section class="section section-alt">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">📅 ग्रामसभा वेळापत्रक</h2>
+
+        {{ $gramsabhas := where .Site.RegularPages "Section" "gramsabha" }}
+        {{ if $gramsabhas }}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>अनु. क्र.</th>
+                    <th>ग्रामसभा</th>
+                    <th>तारीख</th>
+                    <th>वेळ</th>
+                    <th>स्थान</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range $index, $gs := sort $gramsabhas ".Date" }}
+                <tr>
+                    <td>{{ add $index 1 }}</td>
+                    <td>{{ $gs.Title }}</td>
+                    <td>{{ $gs.Date.Format "02 January 2006" }}</td>
+                    <td>{{ $gs.Date.Format "03:04 PM" }}</td>
+                    <td>{{ $gs.Params.location | default "ग्रामपंचायत कार्यालय" }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+        {{ else }}
+        <div class="alert alert-info">
+            <strong>📌 सूचना:</strong> ग्रामसभा वेळापत्रक <a href="/admin/" target="_blank">व्यवस्थापन पॅनेल</a> मधून
+            जोडा.
+        </div>
+        {{ end }}
+
+        <div style="text-align: center; margin-top: var(--spacing-md);">
+            <a href="/admin/#/collections/gramsabha" class="btn btn-outline" target="_blank">📝 ग्रामसभा जोडा/संपादित
+                करा</a>
+        </div>
+    </div>
+</section>
+
+<!-- Notice Categories -->
+<section class="section">
+    <div class="container">
+        <h2 style="text-align: center; margin-bottom: var(--spacing-lg);">सूचना प्रकार</h2>
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-icon">🏛️</div>
+                <h3>ग्रामसभा</h3>
+                <p>ग्रामसभा बैठकींच्या तारखा, वेळापत्रक आणि कार्यक्रम</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📋</div>
+                <h3>निविदा</h3>
+                <p>विकास कामांसाठी निविदा सूचना आणि ठेका माहिती</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💼</div>
+                <h3>नोकरी</h3>
+                <p>रोजगाराच्या संधी आणि भरती सूचना</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📣</div>
+                <h3>सामान्य सूचना</h3>
+                <p>पाणी, वीज, रस्ते आणि इतर सेवांबद्दल सूचना</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: var(--spacing-lg);">
+            <a href="/admin/#/collections/notices" class="btn btn-primary" target="_blank">📝 नवीन सूचना जोडा</a>
+        </div>
+    </div>
+</section>
+{{ end }}
